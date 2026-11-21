@@ -1,0 +1,139 @@
+:root {
+  --orange: #ff8a00;
+  --red: #d62828;
+  --green: #1f9d3a;
+  --yellow: #f2b600;
+  --bg: #fff;
+  --fg: #000;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; background: var(--bg); color: var(--fg); }
+
+body {
+  font: 18px/1.7 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  min-height: 100vh;
+}
+
+/* ---------- страница ---------- */
+.page { max-width: 780px; margin: 0 auto; padding: 48px 92px 96px; }
+.page h1, .page h2, .page h3, .page h4 { line-height: 1.25; margin: 1.4em 0 .5em; }
+.page h1 { margin-top: 0; font-size: 2em; }
+.page p { margin: .8em 0; }
+.page a { color: #000; text-decoration-color: var(--orange); text-decoration-thickness: 2px; }
+.page blockquote { margin: 1em 0; padding: .1em 1em; border-left: 4px solid var(--orange); }
+.page hr { border: 0; border-top: 2px solid var(--orange); margin: 2em 0; }
+.page img { display: block; max-width: 100%; height: auto; margin: 1em auto; }
+.page code { font-family: var(--mono); font-size: .9em; background: #f2f2f2; padding: .1em .35em; border-radius: 4px; }
+.page pre { background: #f6f6f6; padding: 12px 14px; border-radius: 8px; overflow-x: auto; margin: 1em 0; }
+.page pre code { background: none; padding: 0; }
+
+/* ---------- анимация слов / терминалов / картинок ---------- */
+.unit {
+  transition: opacity .45s ease, transform .45s ease;
+  transition-delay: var(--d, 0ms);
+}
+.w { display: inline-block; }
+
+/* появление: слова опускаются на место сверху */
+.page.entering .unit { opacity: 0; transform: translateY(-14px); }
+/* уход: слова опускаются вниз и затухают */
+.page.leaving .unit { opacity: 0; transform: translateY(16px); }
+
+/* ---------- кнопки ← → ---------- */
+.nav {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--orange);
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 10;
+  transition: background .2s, color .2s, opacity .2s;
+}
+.nav-prev { left: 12px; }
+.nav-next { right: 12px; }
+.nav:hover:not(:disabled) { background: var(--orange); color: #fff; }
+.nav:disabled { opacity: .3; cursor: default; }
+.nav:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+
+.pager { position: fixed; bottom: 10px; left: 0; right: 0; text-align: center; font-size: 14px; color: #000; pointer-events: none; }
+
+/* ---------- терминал (class="term") ---------- */
+.term { --tc: var(--orange); margin: 1.6em 0; }
+.term[data-state="ok"]   { --tc: var(--green); }
+.term[data-state="err"]  { --tc: var(--red); }
+.term[data-state="warn"] { --tc: var(--yellow); }
+
+.term-task { margin: 0 0 .6em; font-weight: 600; }
+
+/* плашка с выводом — всегда оранжевая, прилетает сверху */
+.term-out {
+  border: 2px solid var(--orange);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  background: #fff;
+  font-family: var(--mono);
+  font-size: .9em;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.term-out[hidden] { display: none; }
+.term-out.fly { animation: fly .4s ease both; }
+@keyframes fly {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: none; }
+}
+.term-echo { color: #666; }
+.term-ru { color: #444; }
+
+/* поле ввода — рамка меняет цвет по состоянию */
+.term-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--tc);
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: #fff;
+  font-family: var(--mono);
+  transition: border-color .3s, box-shadow .3s;
+}
+.term-box:focus-within { box-shadow: 0 0 0 3px color-mix(in srgb, var(--tc) 25%, transparent); }
+.term-prompt { color: var(--tc); font-weight: 700; user-select: none; }
+.term-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #000;
+  font: inherit;
+  font-size: 16px;
+}
+
+/* ---------- телефон ---------- */
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .page { padding: 32px 58px 80px; }
+  .nav { width: 42px; height: 42px; font-size: 22px; }
+  .nav-prev { left: 6px; }
+  .nav-next { right: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unit { transition: none !important; }
+  .term-out.fly { animation: none; }
+}
