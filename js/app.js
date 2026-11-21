@@ -1,9 +1,14 @@
 import { render } from './markdown.js';
+import { COURSES } from './courses.js';
 
 const view = document.getElementById('page');
 const btnPrev = document.getElementById('prev');
 const btnNext = document.getElementById('next');
 const pager = document.getElementById('pager');
+
+// Курс берётся только из белого списка (js/courses.js).
+const course = COURSES.get(new URLSearchParams(location.search).get('c') ?? '');
+if (course) document.title = `${course.name} — Учебник`;
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const OUT_MS = 480; // чуть больше времени transition в CSS
@@ -15,13 +20,13 @@ let lastDuration = 0;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Имя файла строится только из числа — подставить путь нельзя.
+// Путь строится только из id курса (белый список) и числа — подставить свой путь нельзя.
 async function fetchPage(n) {
-  if (!Number.isInteger(n) || n < 1 || n > 999) return null;
+  if (!course || !Number.isInteger(n) || n < 1 || n > 999) return null;
   if (cache.has(n)) return cache.get(n);
   let text = null;
   try {
-    const r = await fetch(`pages/page${n}.md`, { credentials: 'omit', cache: 'no-cache' });
+    const r = await fetch(`courses/${course.id}/page${n}.md`, { credentials: 'omit', cache: 'no-cache' });
     if (r.ok) text = await r.text();
   } catch { /* нет файла */ }
   cache.set(n, text);
@@ -115,5 +120,7 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('popstate', () => show(pageFromHash()));
 
 show(pageFromHash()).then((ok) => {
-  if (!ok && !current) view.textContent = 'Страница не найдена (Page not found)';
+  if (!ok && !current) {
+    view.textContent = course ? 'Страница не найдена (Page not found)' : 'Курс не найден (Course not found)';
+  }
 });

@@ -1,0 +1,51 @@
+/* ---------- главная страница ---------- */
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 12vh 24px 48px;
+}
+.hero h1 { font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.15; margin: 0 0 .6em; }
+.hero p { max-width: 640px; margin: 0; font-size: 1.1em; }
+.hero::after { content: ""; display: block; width: 90px; height: 4px; background: var(--orange); margin-top: 1.4em; }
+
+.group h2 { font-size: .95rem; text-transform: uppercase; letter-spacing: .08em; margin: 1.8rem 0 .8rem; }
+.courses { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.course {
+  --c: #000;
+  display: inline-block;
+  min-width: 112px;
+  padding: 12px 22px;
+  text-align: center;
+  border: 3px solid var(--c);
+  border-radius: 12px;
+  background: #fff;
+  color: #000;
+  font-weight: 700;
+  font-size: 1.05em;
+  text-decoration: none;
+  transition: background .2s, color .2s, transform .2s;
+}
+.course:hover, .course:focus-visible { background: var(--c); color: #fff; transform: translateY(-2px); outline: none; }
+
+/* ---------- ссылка «Главная» в учебнике ---------- */
+.home-link {
+  position: fixed;
+  top: 10px;
+  left: 12px;
+  z-index: 10;
+  padding: 4px 12px;
+  border: 2px solid var(--orange);
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background .2s, color .2s;
+}
+.home-link:hover, .home-link:focus-visible { background: var(--orange); color: #fff; outline: none; }
